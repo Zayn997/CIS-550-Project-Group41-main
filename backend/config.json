@@ -1,0 +1,9 @@
+{
+  "rds_host": "database-1.c2o7kghmyyn1.us-east-2.rds.amazonaws.com",
+  "rds_port": "3306",
+  "rds_user": "admin",
+  "rds_password": "19680501Hsg",
+  "rds_db": "Predictor",
+  "server_host": "localhost",
+  "server_port": "8080"
+}

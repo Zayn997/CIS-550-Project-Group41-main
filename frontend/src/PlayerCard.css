@@ -1,0 +1,193 @@
+.player-card {
+  border-radius: 10px;
+  /*overflow: hidden;*/
+  width: 500px; /* Adjust the width as needed */
+  height: 450px;
+  color: white; /* Text color */
+  margin: 20px; /* Spacing around the card */
+  /* Add more styles based on your design */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: relative; /* Ensure this is set so that absolute positioning is relative to this container */
+  background: linear-gradient(
+    180deg,
+    rgba(170, 57, 239, 0.4) 0%,
+    /* 70% opacity for #AA39EF */ rgba(98, 62, 241, 0.5) 100%
+      /* 70% opacity for #6A46F9 */
+  );
+  /*backdrop-filter: blur(1px); !* Blur effect for the background *!*/
+
+  box-shadow: 0 0 0 3px #aa39ef; /* Create a "border" effect */
+}
+
+.playerCard-icon-container {
+  position: absolute;
+  top: -50px; /* Half of the icon's height to make it appear half inside the card */
+  left: 50%;
+  transform: translateX(-50%);
+  /* ... other styles ... */
+  z-index: 2; /* Higher than the other elements within the player card */
+}
+
+.playerCard-icon {
+  height: 100px; /* Adjust as needed */
+  width: auto;
+  z-index: 10;
+  margin: -20px;
+  /* ... other styles ... */
+}
+
+.playerCard-image-container {
+  width: 100px; /* Adjust width as necessary */
+  height: 100px; /* Adjust height as necessary */
+  margin: 20px; /* Center the image container */
+  border-radius: 50%; /* Make the container circular */
+  overflow: hidden; /* Hide the overflow to maintain the circular shape */
+  position: relative; /* Positioning context for the overlay */
+  background-color: white; /* Background color for the circular shape */
+  border: 1px solid #6bb8f3; /* Blue border */
+}
+
+.playerCard-image {
+  width: 100%; /* Make the image cover the card width */
+  height: auto; /* Maintain aspect ratio */
+  display: flex; /* Use flex layout */
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+}
+
+.playerCard-info {
+  padding: 10px; /* Add padding inside the card */
+  align-items: center;
+  justify-content: center;
+  /*width: 600px;*/
+  gap: 20px;
+}
+
+.radar-chart-container {
+  /*margin-bottom: 10px;*/
+  /* Scale size */
+  width: auto; /* Adjust width as needed */
+  height: auto; /* Adjust height as needed */
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+}
+
+.player-rating-badge {
+  width: 80px; /* Size of the badge */
+  height: 80px; /* Size of the badge */
+  border-radius: 50%; /* Make it circular */
+  background: linear-gradient(
+    90deg,
+    #370b77 0%,
+    #7560fe 100%
+  ); /* Gradient color for the scroll thumb */
+  color: rgb(236, 188, 255); /* White text */
+  font-size: 24px; /* Large font size */
+  font-weight: bold; /* Bold font */
+  font-family: "Century Gothic";
+
+  display: flex; /* To center the content */
+  align-items: center; /* Align vertically */
+  justify-content: center; /* Align horizontally */
+
+  position: absolute; /* Position it relative to the player card */
+  top: 10px; /* Adjust as needed */
+  right: 10px; /* Adjust as needed */
+  transition: all 0.6s ease; /* Transition for the background color */
+}
+
+.player-rating-badge:hover {
+  background-image: linear-gradient(
+    45deg,
+    rgb(164, 20, 207),
+    rgb(91, 15, 231) /* Rating text color */
+  ); /* Gradient transition */
+  color: rgb(255, 255, 255);
+  font-size: 28px;
+
+  padding: 10px 10px; /* Rating padding */
+}
+
+.player-rating-badge {
+  transition: border-radius 1s linear 0.6s ease-in-out;
+  border-radius: 60% 40% 59% 41% / 55% 36% 64% 45%;
+  animation: borderAnimation 5s infinite;
+}
+@keyframes borderAnimation {
+  0% {
+    border-radius: 60% 40% 59% 41% / 55% 36% 64% 45%;
+  }
+  25% {
+    border-radius: 40% 60% 37% 63% / 42% 56% 44% 58%;
+  }
+  50% {
+    border-radius: 50% 50% 39% 61% / 61% 69% 31% 39%;
+  }
+  75% {
+    border-radius: 59% 41% 68% 32% / 48% 52% 48% 62%;
+  }
+}
+
+.statCard-item {
+  /* Styles for each stat item */
+  background-color: rgba(98, 62, 241, 0.7); /* Stat item background */
+  border-radius: 10px; /* Rounded corners for stat items */
+  padding: 5px; /* Padding inside stat items */
+  margin-bottom: 10px; /* Space below each stat item */
+}
+
+.player-name {
+  flex-direction: column;
+  align-items: center;
+  display: flex;
+}
+
+.playerCard-stats {
+  /* Styles for the player's stats */
+  display: grid; /* Grid layout for stats */
+  grid-template-columns: repeat(4, 1fr); /* Two columns */
+  gap: 10px; /* Space between stats */
+  /*margin-top: 25px;*/
+}
+
+.below_part_stats:before {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  transition: all 0.2s;
+  border: 2px solid #ffffff;
+
+  top: -15px;
+  left: -15px;
+  /* // background: green; */
+  border-right: none;
+  border-bottom: none;
+}
+
+.below_part_stats::after {
+  content: "";
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  /* // background: red; */
+  transition: all 0.2s;
+  border: 2px solid #ffffff;
+
+  bottom: -15px;
+  right: -15px;
+  border-left: none;
+  border-top: none;
+}
+
+.below_part_stats:hover {
+  &::after,
+  &::before {
+    width: calc(100% + 15px + 13px);
+    height: calc(100% + 15px + 13px);
+  }
+}
