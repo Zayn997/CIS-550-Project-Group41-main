@@ -245,3 +245,37 @@ export const ncaaPlayerTopFive = async (
     return { error: error.message };
   }
 };
+
+export const nbaCalculateRatings = async (
+  firstName,
+  lastName,
+  season,
+  league
+) => {
+  try {
+    const response = await axios.get(`${rootURL}/nba/calculate_rating`, {
+      params: { firstName, lastName, season, league },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error calculating ratings:", error);
+    return { error: error.message };
+  }
+};
+
+export const ncaaCalculateRatings = async (
+  firstName,
+  lastName,
+  season,
+  league
+) => {
+  try {
+    const response = await axios.get(`${rootURL}/ncaa/calculate_rating`, {
+      params: { firstName, lastName, season, league },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error calculating ratings:", error);
+    return { error: error.message };
+  }
+};
