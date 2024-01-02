@@ -19,6 +19,8 @@ import {
   allPlayersInfo,
   ncaaAllPlayers,
   ncaaTeams,
+  nbaCalculateRatings,
+  ncaaCalculateRatings,
 } from "./api/api.jsx";
 import playerIcon from "./image/title_image.png"; // Ensure this path is correct
 
@@ -56,18 +58,70 @@ const Players = () => {
     setSelectedNbaTeam(newNBAName);
 
     if (newNBAName) {
-      const response = await allPlayersInfo(newNBAName, season);
-      setNBAPlayerInfo(Array.isArray(response) ? response : []);
+      const playersResponse = await allPlayersInfo(newNBAName, season);
+      if (Array.isArray(playersResponse)) {
+        // Set player info immediately without ratings
+        setNBAPlayerInfo(playersResponse);
+
+        // Asynchronously update ratings for each player
+        playersResponse.forEach(async (player) => {
+          const ratingResponse = await nbaCalculateRatings(
+            player.First_Name,
+            player.Last_Name,
+            season,
+            "nba"
+          );
+
+          setNBAPlayerInfo((prevPlayers) =>
+            prevPlayers.map((p) => {
+              if (
+                p.First_Name === player.First_Name &&
+                p.Last_Name === player.Last_Name
+              ) {
+                // Update the player with the new rating
+                return { ...p, Rating: ratingResponse.Calculated_Rating };
+              }
+              return p; // Return the player unchanged if it's not the one we updated
+            })
+          );
+        });
+      }
     }
   };
 
   const handleNCAATeamChange = async (e) => {
-    const newNccaName = e.target.value;
-    setSelectedNcaaTeam(newNccaName);
+    const newNCCAName = e.target.value;
+    setSelectedNcaaTeam(newNCCAName);
 
-    if (newNccaName) {
-      const response = await ncaaAllPlayers(newNccaName);
-      setNCAAPlayerInfo(Array.isArray(response) ? response : []);
+    if (newNCCAName) {
+      const playersResponse = await ncaaAllPlayers(newNCCAName, season);
+      if (Array.isArray(playersResponse)) {
+        // Set player info immediately without ratings
+        setNCAAPlayerInfo(playersResponse);
+
+        // Asynchronously update ratings for each player
+        playersResponse.forEach(async (player) => {
+          const ratingResponse = await ncaaCalculateRatings(
+            player.First_Name,
+            player.Last_Name,
+            season,
+            "ncaa"
+          );
+
+          setNCAAPlayerInfo((prevPlayers) =>
+            prevPlayers.map((p) => {
+              if (
+                p.First_Name === player.First_Name &&
+                p.Last_Name === player.Last_Name
+              ) {
+                // Update the player with the new rating
+                return { ...p, Rating: ratingResponse.Calculated_Rating };
+              }
+              return p; // Return the player unchanged if it's not the one we updated
+            })
+          );
+        });
+      }
     }
   };
 
@@ -164,10 +218,11 @@ const Players = () => {
           <div className="players-list">
             {NBAplayerInfo.map((player) => (
               <PlayersCard
-                className="NBA-card"
-                league="NBA"
+                key={player.id} // Use a unique key for each player
+                leagueName="NBA"
                 player={player}
-                imagePath={player.pic_url} // Pass the image path to the component
+                imagePath={player.pic_url || playerIcon} // Use playerIcon as a fallback
+                rating={player.Rating}
               />
             ))}
           </div>
@@ -208,9 +263,11 @@ const Players = () => {
           <div className="players-list">
             {NCAAplayerInfo.map((player) => (
               <PlayersCard_NCAA
+                key={player.id} // Use a unique key for each player
                 league="NCAA"
                 player={player}
-                imagePath={playerImagePath} // Pass the image path to the component
+                imagePath={player.pic_url || playerIcon} // Use playerIcon as a fallback
+                rating={player.Rating}
               />
             ))}
           </div>
