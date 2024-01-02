@@ -5,7 +5,7 @@ import nbaIcon from "../image/NBA_icon.png";
 import defaultNcaaImage from "../playImageSample/Jason_Tatum.png"; // Default NCAA player image
 import defaultNbaImage from "../playImageSample/victor-wembanyama.png"; // Default NBA player image
 
-const PlayersCard = ({ player }) => {
+const PlayersCard = ({ player, rating }) => {
   // Choose the icon based on the player's league
   const leagueIcon = player.league === "NCAA" ? ncaaIcon : nbaIcon;
   const leagueAltText = player.league === "NCAA" ? "NCAA_icon" : "NBA_icon";
@@ -17,6 +17,7 @@ const PlayersCard = ({ player }) => {
       <div className="players-card-header">
         <img src={leagueIcon} alt={leagueAltText} className="league-icon" />
         <span className="players-rating">{player.Jersey_Number}</span>
+        <span className="players-rating-calculate">{rating}</span>
         <span className="players-rating-2k">{player.Overall_Rating}</span>
       </div>
       <div className="players-position">{player.Position}</div>
