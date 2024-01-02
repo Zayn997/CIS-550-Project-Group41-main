@@ -109,7 +109,7 @@ const playerInfo = async (req, res) => {
 
   const league = "NBA_Player_Rating";
 
-  let sqlQuery = `SELECT First_Name, Last_Name, Height, Weight, Jersey_Number, Position, Overall_Rating FROM ${league} WHERE Team_Name = ? AND First_Name = ? AND Last_Name = ?`;
+  let sqlQuery = `SELECT First_Name, Last_Name, Height, Weight, Jersey_Number, Position, Overall_Rating, pic_url FROM ${league} WHERE Team_Name = ? AND First_Name = ? AND Last_Name = ?`;
   let queryParams = [teamName, firstName, lastName];
 
   // Execute the query
@@ -683,6 +683,114 @@ const ncaaPlayerAvgSkills = async (req, res) => {
   });
 };
 
+const calculatePlayerRating = (playerStats) => {
+  const rating = Math.round(
+    (playerStats.PTS * 0.2 +
+      playerStats.REB * 0.15 +
+      playerStats.AST * 0.15 +
+      playerStats.STL * 0.1 +
+      playerStats.BLK * 0.1 +
+      playerStats.FG3_PCT * 0.1 +
+      playerStats.FG_PCT * 0.1 +
+      playerStats.FT_PCT * 0.1) *
+      4.95 +
+      61
+  );
+  return Math.max(68, Math.min(rating, 99)); // Clamp the rating between 68 and 99
+};
+
+const nbacalculateRatingEndpoint = (req, res) => {
+  const { firstName, lastName, season, league } = req.query;
+
+  if (!firstName || !lastName || !season || !league) {
+    return res.status(400).json({
+      error:
+        "Missing required parameters: firstName, lastName, season, and league.",
+    });
+  }
+
+  const table =
+    league.toLowerCase() === "nba"
+      ? "nba_player_performance"
+      : "ncaa_player_performance";
+
+  let sqlQuery = `
+    SELECT PTS, REB, AST, STL, BLK, FG3_PCT, FG_PCT, FT_PCT 
+    FROM ${table} 
+    WHERE First_Name = ? AND Last_Name = ? AND Season = ?
+  `;
+
+  connection.query(sqlQuery, [firstName, lastName, season], (err, stats) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Query failed: " + err.message });
+    }
+
+    if (stats.length === 0) {
+      return res.status(404).json({
+        error: `No ${league.toUpperCase()} player stats found for the provided information.`,
+      });
+    }
+
+    const playerStats = stats[0];
+    const calculatedRating = calculatePlayerRating(playerStats);
+
+    res.status(200).json({
+      firstName,
+      lastName,
+      season,
+      league,
+      Calculated_Rating: calculatedRating,
+    });
+  });
+};
+
+const ncaacalculateRatingEndpoint = (req, res) => {
+  const { firstName, lastName, season, league } = req.query;
+
+  if (!firstName || !lastName || !season || !league) {
+    return res.status(400).json({
+      error:
+        "Missing required parameters: firstName, lastName, season, and league.",
+    });
+  }
+
+  const table =
+    league.toLowerCase() === "nba"
+      ? "nba_player_performance"
+      : "ncaa_player_performance";
+
+  let sqlQuery = `
+    SELECT PTS, REB, AST, STL, BLK, FG3_PCT, FG_PCT, FT_PCT 
+    FROM ${table} 
+    WHERE First_Name = ? AND Last_Name = ? AND Season = ?
+  `;
+
+  connection.query(sqlQuery, [firstName, lastName, season], (err, stats) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: "Query failed: " + err.message });
+    }
+
+    if (stats.length === 0) {
+      return res.status(404).json({
+        error: `No ${league.toUpperCase()} player stats found for the provided information.`,
+      });
+    }
+
+    const playerStats = stats[0];
+    const calculatedRating = calculatePlayerRating(playerStats);
+
+    res.status(200).json({
+      firstName,
+      lastName,
+      season,
+      league,
+      Calculated_Rating: calculatedRating,
+    });
+  });
+};
+
 module.exports = {
   get,
   getPlayersByTeamName,
@@ -701,4 +809,6 @@ module.exports = {
   ncaaPlayerInfo,
   ncaaTeamAvgSkills,
   ncaaPlayerTopFive,
+  nbacalculateRatingEndpoint,
+  ncaacalculateRatingEndpoint,
 };
