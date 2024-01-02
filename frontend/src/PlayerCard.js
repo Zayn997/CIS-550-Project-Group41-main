@@ -30,7 +30,7 @@ const PlayerCard = ({ player, playerAvgSkills, leagueName }) => {
           </div>
           <div className="playerCard-image-container">
             <img
-              src={skills.pic_url || defaultImage}
+              src={playerData.pic_url || defaultImage}
               alt={playerData.name}
               className="playerCard-image"
             />
