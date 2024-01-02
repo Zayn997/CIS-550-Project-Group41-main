@@ -20,6 +20,8 @@ app.get("/playerAvgSkills", routes.playerAvgSkills);
 app.get("/playerTopFive", routes.playerTopFive);
 app.get("/teamAvgSkills", routes.teamAvgSkills);
 app.get("/teamTopFive", routes.teamTopFive);
+app.get("/nba/calculate_rating", routes.nbacalculateRatingEndpoint);
+
 // ncaa api
 app.get("/ncaa/allPlayers", routes.ncaaAllPlayers);
 app.get("/ncaa/topFive", routes.ncaaTopFive);
@@ -28,6 +30,7 @@ app.get("/ncaa/allTeams", routes.ncaaAllTeams);
 app.get("/ncaa/playerInfo", routes.ncaaPlayerInfo);
 app.get("/ncaa/teamAvgSkills", routes.ncaaTeamAvgSkills);
 app.get("/ncaa/ncaaPlayerTopFive", routes.ncaaPlayerTopFive);
+app.get("/ncaa/calculate_rating", routes.ncaacalculateRatingEndpoint);
 
 app.listen(config.server_port, () => {
   console.log(
